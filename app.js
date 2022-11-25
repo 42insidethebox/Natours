@@ -9,6 +9,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const viewRouter = require('./routes/viewRoutes');
@@ -17,7 +18,8 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const reviewRouter = require('./routes/reviewRoutes');
 
-// Start express app
+// Start express application
+
 const app = express();
 
 app.set('view engine', 'pug');
@@ -49,7 +51,7 @@ app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 // Development Logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
-  console.log('Were using development environment now..');
+  // console.log('Were using development environment now..');
 }
 
 //Limit requests from same API
@@ -88,6 +90,8 @@ app.use(
     ],
   })
 );
+
+app.use(compression());
 
 // Test middleware
 app.use((req, res, next) => {

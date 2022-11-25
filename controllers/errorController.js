@@ -9,7 +9,7 @@ const handleCastErrorDB = (err) => {
 
 const handleDuplicateFieldsDB = (err) => {
   const key = Object.keys(err.keyValue).join('');
-  console.log('this is the key', key);
+  //console.log('this is the key', key);
   const message = `The key '${key}' has duplicate value of '${err.keyValue[key]}'`;
   return new AppError(message, 400);
 };
@@ -48,8 +48,8 @@ const sendErrorDev = (err, req, res) => {
 const sendErrorProd = (err, req, res) => {
   if (req.originalUrl.startsWith('/api')) {
     // Operational, trusted error: send message to client
-    console.log('error is operational');
-    console.log(err.isOperational);
+    // console.log('error is operational');
+    // console.log(err.isOperational);
     if (err.isOperational) {
       return res.status(err.statusCode).json({
         status: err.status,
@@ -59,7 +59,7 @@ const sendErrorProd = (err, req, res) => {
       //Programming or other unknown error: dont leak error details
     }
     //1) Log error to console
-    console.error('ERROR', err);
+    // console.error('ERROR', err);
     //2) Send generic message
     return res.status(500).json({
       status: 'error',
@@ -77,7 +77,7 @@ const sendErrorProd = (err, req, res) => {
     //Programming or other unknown error: dont leak error details
   }
   //1) Log error to console
-  console.error('ERROR', err);
+  // console.error('ERROR', err);
   //2) Send generic message
   return res.status(500).json({
     status: 'error',
@@ -92,14 +92,14 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
-    console.log(`this is the error: ${err}`);
-    console.log(err.code === 11000);
+    // console.log(`this is the error: ${err}`);
+    // console.log(err.code === 11000);
     let error = { ...err };
     error.message = err.message;
     error.name = err.name;
     error.code = err.code;
-    console.log(`error name: ${error.name}`);
-    console.log(`errorcode ${err.code}`);
+    // console.log(`error name: ${error.name}`);
+    // console.log(`errorcode ${err.code}`);
 
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (err.code === 11000) error = handleDuplicateFieldsDB(error);

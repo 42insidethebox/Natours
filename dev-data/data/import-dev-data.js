@@ -21,7 +21,7 @@ mongoose
   })
   .then((con) => {
     //console.log(con.connections);
-    console.log('DB connection successful');
+    // console.log('DB connection successful');
   });
 
 //READ JSON FILE
@@ -40,10 +40,10 @@ const importData = async () => {
     await User.create(users, { validateBeforeSave: false });
     await Review.create(reviews);
 
-    console.log('data imported');
+    // console.log('data imported');
   } catch (err) {
-    console.log(err);
-    console.log('data NOT imported');
+    // console.log(err);
+    // console.log('data NOT imported');
   }
   process.exit();
 };
@@ -56,9 +56,9 @@ const deleteData = async () => {
     await User.deleteMany();
     await Review.deleteMany();
 
-    console.log('Data deleted!');
+    // console.log('Data deleted!');
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
   process.exit();
 };
@@ -68,4 +68,4 @@ if (process.argv[2] === '--import') {
 } else if (process.argv[2] === '--delete') {
   deleteData();
 }
-console.log(process.argv);
+//console.log(process.argv);

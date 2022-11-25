@@ -33,7 +33,7 @@ const createSendToken = (user, statusCode, res) => {
   //remove password from output
   user.password = undefined;
 
-  console.log(process.env.NODE_ENV);
+  //console.log(process.env.NODE_ENV);
   res.status(statusCode).json({
     status: 'success',
     token,
@@ -55,7 +55,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 
   const url = `${req.protocol}://${req.get('host')}/me`;
-  console.log(url);
+  // console.log(url);
   await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, res);
@@ -72,10 +72,10 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email }).select('+password');
   //  console.log(user);
 
-  console.log(`this is the password ${password}`);
-  console.log(`this is the password ${user.password}`);
+  //console.log(`this is the password ${password}`);
+  //console.log(`this is the password ${user.password}`);
   const test = await user.correctPassword(password, user.password);
-  console.log(test);
+  //console.log(test);
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401)); //401 means unauthorized
   }
@@ -96,13 +96,13 @@ exports.protect = catchAsync(async (req, res, next) => {
   // 1 Gettting token and checking if it's there
   let token;
 
-  console.log('Using protect middleware');
+  //console.log('Using protect middleware');
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
-    console.log('this is the token', token);
+    // console.log('this is the token', token);
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
@@ -112,8 +112,8 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // 2 Verificating if the token is valid and unaltered
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(`this is decoded`);
-  console.log(decoded);
+  // console.log(`this is decoded`);
+  // console.log(decoded);
 
   // 3 If user still exists
   const freshUser = await User.findById(decoded.id);
@@ -158,8 +158,8 @@ exports.isLoggedIn = async (req, res, next) => {
         req.cookies.jwt,
         process.env.JWT_SECRET
       );
-      console.log(`this is decoded`);
-      console.log(decoded);
+      // console.log(`this is decoded`);
+      // console.log(decoded);
 
       // 3 If user still exists
       const currentUser = await User.findById(decoded.id);
@@ -188,7 +188,7 @@ exports.isLoggedIn = async (req, res, next) => {
 //roles is an array ['admin','lead-guide']. Role ='user' does not hav permission
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
-    console.log(req.user.role);
+    // console.log(req.user.role);
     if (!roles.includes(req.user.role)) {
       return next(
         new AppError('You do not have permission to perform this action', 403)
@@ -218,14 +218,14 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     await new Email(user, resetURL).sendPasswordReset();
 
-    console.log('doing forgotpassword');
+    // console.log('doing forgotpassword');
 
     res.status(200).json({
       status: 'success',
       message: 'Token sent via email',
     });
   } catch (err) {
-    console.log(`this is the error`, err);
+    // console.log(`this is the error`, err);
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
@@ -257,7 +257,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   await user.save();
-  console.log('resetting password!!');
+  // console.log('resetting password!!');
   //update changepasswordat propert for the user
   //login the user send jwt
   createSendToken(user, 201, res);
@@ -271,7 +271,7 @@ exports.updatePassoword = catchAsync(async (req, res, next) => {
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
     return next(new AppError('Your current password is wrong', 401));
   }
-  console.log(user.password, req.body.passwordConfirm);
+  // console.log(user.password, req.body.passwordConfirm);
   //update password
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;

@@ -146,7 +146,7 @@ tourSchema.virtual('reviews', {
 
 // only for save() and create()
 tourSchema.pre('save', function (next) {
-  console.log(this);
+  // console.log(this);
   this.slug = slugify(this.name, { lower: true });
   next();
 });
@@ -188,8 +188,8 @@ tourSchema.pre(/^find/, function (next) {
 });
 
 tourSchema.post(/^find/, function (docs, next) {
-  console.log(`Query took ${Date.now() - this.start} milliseconds`);
-  console.log(docs);
+  //console.log(`Query took ${Date.now() - this.start} milliseconds`);
+  //console.log(docs);
   next();
 });
 

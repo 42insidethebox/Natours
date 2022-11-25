@@ -72,13 +72,13 @@ exports.getMe = (req, res, next) => {
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   //create error if user tries to update password
-  console.log(req.file);
-  console.log(req.body);
+  //console.log(req.file);
+  // console.log(req.body);
   if (req.body.password || req.body.passwordConfirm)
     return next(new AppError('This route is not for password updates!', 400));
 
   // update user document
-  console.log('usher');
+  // console.log('usher');
 
   //save is not correct in this case because we cannot patch without updatepassword for eg.
   //  const user = await User.findById(req.user.id);

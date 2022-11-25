@@ -21,7 +21,7 @@ exports.updateOne = (Model) =>
 
       runValidators: true,
     });
-    console.log('here the doc..', doc);
+    // console.log('here the doc..', doc);
     if (!doc) {
       return next(new AppError('No document found with that ID', 404));
     }
@@ -48,11 +48,11 @@ exports.createOne = (Model) =>
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
-    console.log('this is the query', req.params.id);
+    //  console.log('this is the query', req.params.id);
 
     if (popOptions) query = query.populate(popOptions);
     const doc = await query;
-    console.log('this is the document', doc);
+    //  console.log('this is the document', doc);
     if (!doc) {
       return next(new AppError('No tour found with that ID', 404));
     }
